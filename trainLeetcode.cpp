@@ -3,39 +3,22 @@
 
 using namespace std;
 const int mx_n = 1e6 + 9;
-
-int dp[15][15];
-string s, t;
-string ans = "";
-int solve(int i, int j) {
-    if(i >= s.size() || j >= t.size()) return 0;
-
-    int &ret = dp[i][j];
-    if(ret != -1) return ret;
-
-    if(s[i] == t[j]) {
-        ans += s[i];
-        return ret = solve(i + 1, j + 1) + 1;
-    }
-    ret = max(solve(i + 1, j) , solve(i , j + 1));
-
-    return ret;
-
-
+bool containsNearbyAlmostDuplicate(vector <int> arr, int k, int t) {
+    queue <int> q;
+    set <int> st;
+    for(int i = 0; i < min(k + 1 , arr.size()); i++) q.push()
 }
+
 int main() {
-
-    int n;
-    cin >> s >> t;
-
-    memset(dp , -1 , sizeof dp);
-
-    cout << solve(0 , 0) << "\n";
-    for(int i = 0; i < s.size(); i++) {
-        for(int j = 0; j < t.size(); j++) {
-            cout << i << " " << j << " " << dp[i][j] << "\n";
-        }
+    int n, k, t;
+    cin >> n >> k >> t;
+    vector <int> arr;
+    for(int i = 0; i < n; i++) {
+        cin >> a;
+        arr.push_back(a);
     }
+
+    cout << m_sub(0 , n - 1);containsNearbyAlmostDuplicate(arr , k , t);
 
 
     return 0;
