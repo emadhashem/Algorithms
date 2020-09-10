@@ -1,0 +1,127 @@
+#include <bits/stdc++.h>
+#define F first
+#define S second
+#define forn(i, n) for(int i = 0; i < int(n); i++)
+#define p_b push_back
+#define all(c)              c.begin(), c.end()
+using namespace std;
+typedef long long ll; //printf("%lld ", ll); to out put long
+typedef pair <int , int> pii;
+typedef pair <ll , ll> pll;
+const double eps = 1e-6;
+const int MAXN = 2e7 + 5;
+const ll MOD = 1e9 + 7;
+bool ODD(ll O) {return (O % 2 != 0);}
+ll gcd(ll a, ll b) {return __gcd(a , b);}
+ll lcm(ll a, ll b) {return a * b / gcd(a , b);}
+int dx[] = {1, 0, -1 ,0};
+int dy[] = {0, 1, 0, -1};
+ll power (ll x, ll y , ll mod = MOD) {
+    if(y == 0) return 1;
+    if(ODD(y)) return (x % mod * power(x , y / 2) % mod * power(x , y / 2) % mod) % mod;
+    return (power(x , y / 2) % mod * power(x , y / 2) % mod) % mod;
+}
+/*------ never give up --------*/
+struct seg_tree{
+    int sz;
+    vector <ll> sums;
+    vector <ll> mns;
+    vector <ll> mxs;
+    void init(int n) {
+        sz = 1;
+        while(sz < n) sz *= 2;
+        sums.assign(2 * sz , 0ll);
+        mns.assign(2 * sz , INT_MAX);
+        mxs.assign(2 * sz , INT_MIN);
+    }
+    void set_v(int i, int v, int x, int lx, int rx) {
+        if(rx - lx == 0) {
+            sums[x] = v;
+            mns[x] = v;
+            mxs[x] = v;
+            return;
+        }
+        int mid = (lx + rx) / 2;
+        if(i <= mid) {
+            set_v(i , v , 2 * x + 1, lx , mid);
+        } else {
+            set_v(i , v , 2 * x + 2, mid + 1 , rx);
+        }
+        sums[x] = sums[2 * x + 1] + sums[2 * x + 2];
+        mns[x] = min(mns[2 * x + 1] , mns[2 * x + 2]);
+        mxs[x] = max(mns[2 * x + 1] , mns[2 * x + 2]);
+    }
+    void set_v(int i, int v) {
+        set_v(i , v , 0 , 0 , sz - 1);
+    }
+    // we have there cases
+    // 1 - no intersection
+    // 2- all included in the current segment
+    // 3- not all included in the current segment
+
+    ll sum(int l, int r, int x, int lx, int rx) {
+        if(lx > r || l > rx) return 0;
+        if(lx >= l && rx <= r) return sums[x];
+        int mid = (lx + rx) / 2;
+        ll lft = sum(l , r , 2 * x + 1, lx , mid);
+        ll rgh = sum(l , r , 2 * x + 2, mid + 1 , rx);
+        return lft + rgh;
+
+    }
+    ll sum(int l, int r) {
+        return sum(l , r , 0 , 0 , sz - 1);
+    }
+    ///*----------*///
+    ll get_min(int l, int r, int x, int lx , int rx) {
+        if(lx > r || l > rx) return INT_MAX;
+        if(lx >= l && rx <= r) return mns[x];
+        int mid = (lx + rx) / 2;
+        ll lft = get_min(l , r , 2 * x + 1, lx , mid);
+        ll rgh = get_min(l , r , 2 * x + 2, mid + 1 , rx);
+        return min(lft , rgh);
+    }
+    ll get_min(int l, int r) {
+        return get_min(l , r , 0 , 0 , sz - 1);
+    }
+    ///*------------*/
+    ll get_max(int l, int r, int x, int lx , int rx) {
+        if(lx > r || l > rx) return INT_MIN;
+        if(lx >= l && rx <= r) return mxs[x];
+        int mid = (lx + rx) / 2;
+        ll lft = get_max(l , r , 2 * x + 1, lx , mid);
+        ll rgh = get_max(l , r , 2 * x + 2, mid + 1 , rx);
+        return max(lft , rgh);
+    }
+    ll get_max(int l, int r) {
+        return get_max(l , r , 0 , 0 , sz - 1);
+    }
+};
+int main () {
+    int t = 1;
+    //cin >> t;
+    while(t--) {
+        int n, m;
+        cin >> n >> m;
+        seg_tree st;
+        st.init(n);
+        for(int i = 0; i < n; i++) {
+            int v;
+            cin >> v;
+            st.set_v(i , v);
+        }
+        for(int i = 0; i < m; i++) {
+            int ty, l, r;
+            cin >> ty >> l >> r;
+            if(ty == 1) {
+                //cout << st.sum(l , r) << "\n";
+                --l, --r;
+                cout << st.sum(l , r) - st.get_max(l , r) - st.get_min(l , r) << "\n";
+            } else {
+                --l;
+                st.set_v(l , r);
+            }
+        }
+    }
+
+    return 0;
+}
