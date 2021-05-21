@@ -1,0 +1,10 @@
+{
+  problem : [https://atcoder.jp/contests/abc102/tasks/arc100_a]
+  topic : ternary-binary search
+  refrences : {
+  [https://codeforces.com/contest/1520/submission/115516091]
+  [https://www.hackerearth.com/practice/algorithms/searching/ternary-search/tutorial/]
+}
+
+
+
